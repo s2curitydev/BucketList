@@ -21,6 +21,9 @@ const initialState = {
   ],
 };
 
+const bucket_db_load = firestore
+  .collection("bucket")
+  .orderBy("completed", "desc");
 const bucket_db = firestore.collection("bucket");
 
 // Action Creators
@@ -56,7 +59,7 @@ export const isLoaded = (loaded) => {
 // 파이어베이스랑 통신하는 부분
 export const loadBucketFB = () => {
   return function (dispatch) {
-    bucket_db.get().then((docs) => {
+    bucket_db_load.get().then((docs) => {
       let bucket_data = [];
       docs.forEach((doc) => {
         // 도큐먼트 객체를 확인해보자!

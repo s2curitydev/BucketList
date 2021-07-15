@@ -1,5 +1,5 @@
 // 리액트 패키지를 불러옵니다.
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
@@ -15,6 +15,7 @@ import {
   updateBucketNoteFB,
 } from "./redux/modules/bucket";
 
+// useEffect(() => {}, [bucket_list[bucket_index].bucket_note]);
 const Detail = (props) => {
   const dispatch = useDispatch();
 
@@ -28,23 +29,24 @@ const Detail = (props) => {
     ? "완료취소"
     : "버킷완료";
 
-  const [bucketNote, setBucketNote] = useState("testValue");
+  const [bucketNote, setBucketNote] = useState(null);
   console.log(bucket_list[bucket_index].bucket_note);
   console.log(bucketNote);
+
   return (
     <div>
       <h1>{bucket_list[bucket_index].text}</h1>
       <form id="noter-save-form" method="POST">
         <div className="form-group">
-          <label for="exampleFormControlTextarea1"></label>
+          {/* <label for="exampleFormControlTextarea1"></label> */}
           <textarea
             type="text"
-            name="textarea"
             id="textarea"
             rows="20"
             cols="49"
             onChange={() => {
               setBucketNote(document.getElementById("textarea").value);
+              dispatch(updateBucketNoteFB(bucket_index, bucketNote));
             }}
           >
             {bucket_list[bucket_index].bucket_note}
@@ -56,9 +58,15 @@ const Detail = (props) => {
           variant="outlined"
           color="primary"
           onClick={() => {
+            if (
+              document.getElementById("textarea").value ===
+              bucket_list[bucket_index].bucket_note
+            ) {
+              return;
+            }
             setBucketNote(document.getElementById("textarea").value);
-            console.log(bucketNote);
             dispatch(updateBucketNoteFB(bucket_index, bucketNote));
+            window.location.reload();
           }}
         >
           노트저장
@@ -86,6 +94,15 @@ const Detail = (props) => {
         <Button
           variant="outlined"
           onClick={() => {
+            //추가한 노트를 저장하지 않고 홈으로 가는 경우
+            if (
+              document.getElementById("textarea").value !==
+              bucket_list[bucket_index].bucket_note
+            ) {
+              //추가한 노트를 저장후 홈으로 이동
+              setBucketNote(document.getElementById("textarea").value);
+              dispatch(updateBucketNoteFB(bucket_index, bucketNote));
+            }
             props.history.goBack();
           }}
         >
