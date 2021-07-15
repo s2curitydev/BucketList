@@ -1,12 +1,17 @@
 .App {
   text-align: center;
+  flex-direction:column;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
+.bucketlist {
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
