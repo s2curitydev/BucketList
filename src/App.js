@@ -8,6 +8,7 @@ import BucketList from "./BucketList";
 import styled from "styled-components";
 import Detail from "./Detail";
 import NotFound from "./NotFound";
+import UserInfo from "./redux/modules/UserInfo";
 
 // 리덕스 스토어와 연결하기 위해 connect라는 친구를 호출할게요!
 import { connect } from "react-redux";
@@ -23,6 +24,8 @@ import Progress from "./Progress";
 import Spinner from "./Spinner";
 // firestore 가져오기
 import { firestore } from "./firebase";
+import Icon from "@material-ui/core/Icon";
+import { FcPlus } from "react-icons/fc";
 
 // 이 함수는 스토어가 가진 상태값을 props로 받아오기 위한 함수예요.
 const mapStateTopProps = (state) => ({
@@ -73,7 +76,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Container>
-          <Title>내 버킷리스트</Title>
+          <UserInfo />
           {/* firestore에서 데이터를 가져온 후에만 페이지를 보여줄거예요!  */}
           {!this.props.is_loaded ? (
             <Spinner />
@@ -91,7 +94,9 @@ class App extends React.Component {
         </Container>
         <Input>
           <input type="text" ref={this.text} />
-          <button onClick={this.addBucketList}>추가하기</button>
+          <button onClick={this.addBucketList}>
+            <FcPlus size="32" />
+          </button>
         </Input>
       </div>
     );
@@ -117,7 +122,7 @@ const Input = styled.div`
     border-radius: 5px;
     margin-right: 10px;
     border: 1px solid #888;
-    width: 70%;
+    width: 90%;
     &:focus {
       border: 1px solid #a673ff;
     }
@@ -126,8 +131,8 @@ const Input = styled.div`
   & button {
     width: 25%;
     color: #fff;
-    border: 1px solid #a673ff;
-    background-color: #a673ff;
+    border: 1px solid #fff;
+    background-color: #fff;
   }
 `;
 
@@ -139,11 +144,6 @@ const Container = styled.div`
   margin: 20px auto;
   border-radius: 5px;
   border: 1px solid #ddd;
-`;
-
-const Title = styled.h1`
-  color: #673ab7;
-  text-align: center;
 `;
 
 const Line = styled.hr`

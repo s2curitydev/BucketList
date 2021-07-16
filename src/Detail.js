@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { ImHome } from "react-icons/im";
+import { ImCheckmark, ImCheckmark2, ImFacebook2 } from "react-icons/im";
+import { GoTrashcan } from "react-icons/go";
 
 // redux hook을 불러옵니다.
 import { useDispatch, useSelector } from "react-redux";
@@ -25,9 +28,11 @@ const Detail = (props) => {
   console.log(bucket_list);
   // url 파라미터에서 인덱스 가져오기
   let bucket_index = parseInt(props.match.params.index);
-  const buttonLable = bucket_list[bucket_index].completed
-    ? "완료취소"
-    : "버킷완료";
+  const buttonLable = bucket_list[bucket_index].completed ? (
+    <ImCheckmark size="30" />
+  ) : (
+    <ImCheckmark2 size="30" />
+  );
 
   const [bucketNote, setBucketNote] = useState(null);
   console.log(bucket_list[bucket_index].bucket_note);
@@ -35,7 +40,7 @@ const Detail = (props) => {
 
   return (
     <div>
-      <h1>{bucket_list[bucket_index].text}</h1>
+      <h2>{bucket_list[bucket_index].text}</h2>
       <form id="noter-save-form" method="POST">
         <div className="form-group">
           {/* <label for="exampleFormControlTextarea1"></label> */}
@@ -66,7 +71,7 @@ const Detail = (props) => {
             }
             setBucketNote(document.getElementById("textarea").value);
             dispatch(updateBucketNoteFB(bucket_index, bucketNote));
-            window.location.reload();
+            window.location.reload(); //화면이 바뀌면서 버킷항목이 바뀐다. 수정요망
           }}
         >
           노트저장
@@ -89,7 +94,7 @@ const Detail = (props) => {
             props.history.goBack();
           }}
         >
-          버킷삭제
+          <GoTrashcan size="30" />
         </Button>
         <Button
           variant="outlined"
@@ -106,7 +111,15 @@ const Detail = (props) => {
             props.history.goBack();
           }}
         >
-          홈으로
+          <ImHome size="30" />
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            alert("coming soon");
+          }}
+        >
+          <ImFacebook2 size="28" />
         </Button>
       </ButtonGroup>
     </div>
