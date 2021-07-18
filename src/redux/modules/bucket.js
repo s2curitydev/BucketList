@@ -21,9 +21,9 @@ const initialState = {
   ],
 };
 
-const bucket_db_load = firestore
-  .collection("bucket")
-  .orderBy("completed", "desc");
+// const bucket_db_load = firestore
+// .collection("bucket")
+// .orderBy("completed", "desc");
 const bucket_db = firestore.collection("bucket");
 
 // Action Creators
@@ -43,8 +43,8 @@ export const updateBucket = (bucket) => {
   return { type: UPDATE, bucket };
 };
 
-export const updateBucketNote = (bucket) => {
-  return { type: UPDATENOTE, bucket };
+export const updateBucketNote = (bucket_index, bucketNote) => {
+  return { type: UPDATENOTE, bucket_index, bucketNote };
 };
 
 export const updateBucketCompleted = (bucket) => {
@@ -59,7 +59,7 @@ export const isLoaded = (loaded) => {
 // 파이어베이스랑 통신하는 부분
 export const loadBucketFB = () => {
   return function (dispatch) {
-    bucket_db_load.get().then((docs) => {
+    bucket_db.get().then((docs) => {
       let bucket_data = [];
       docs.forEach((doc) => {
         // 도큐먼트 객체를 확인해보자!
@@ -163,9 +163,8 @@ export const updateBucketFB = (bucket) => {
   };
 };
 export const updateBucketNoteFB = (bucket_index, bucketNote) => {
-  console.log(bucketNote);
   return function (dispatch, getState) {
-    console.log(getState);
+    // console.log(getState);
     // state에 있는 값을 가져옵니다!
     const _bucket_data = getState().bucket.list[bucket_index];
     // console.log(getState().bucket.list[bucket_index]);
@@ -180,10 +179,11 @@ export const updateBucketNoteFB = (bucket_index, bucketNote) => {
       .doc(bucket_data.id)
       .update(bucket_data)
       .then((res) => {
-        dispatch(updateBucketNote(bucketNote));
+        console.log(bucketNote);
+        dispatch(updateBucketNote(bucket_index, bucketNote));
       })
       .catch((err) => {
-        console.log("err");
+        console.log(err);
       });
   };
 };
@@ -210,6 +210,7 @@ export const deleteBucketFB = (bucket) => {
 
 // Reducer
 export default function reducer(state = initialState, action) {
+  console.log("action: ", action);
   switch (action.type) {
     // do reducer stuff
     case "bucket/LOAD": {
@@ -257,17 +258,22 @@ export default function reducer(state = initialState, action) {
       return { ...state, list: bucket_list };
     }
 
-    // // NOTE 값 변경
-    // case "bucket/UPDATENOTE": {
-    //   const bucket_list = state.list.map((l, idx) => {
-    //     if (idx === action.bucket) {
-    //       console.log(action.bucket);
-    //       return { ...l, bucket_note: bucket_list.bucket_note };
-    //     }
-    //     return l;
-    //   });
-    //   return { ...state, list: bucket_list };
-    // }
+    // NOTE 값 변경
+    case "bucket/UPDATENOTE": {
+      console.log(state.list);
+      console.log(action);
+      const bucket_list = state.list.map((l, idx) => {
+        if (idx === action.bucket_index) {
+          console.log(action.bucketNote);
+
+          return { ...l, bucket_note: action.bucketNote };
+        }
+        return l;
+      });
+      console.log(bucket_list);
+      console.log("state: ", state);
+      return { ...state, list: bucket_list };
+    }
 
     case "bucket/LOADED": {
       return { ...state, is_loaded: action.loaded };

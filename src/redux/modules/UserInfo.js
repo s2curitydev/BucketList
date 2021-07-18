@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import Avatar from "@material-ui/core/Avatar";
-import { FcRefresh } from "react-icons/fc";
 import image from "../../assets/profile.PNG";
 
 //유저이니셜 넣은 변수
@@ -12,14 +11,6 @@ function UserInfo() {
   return (
     <div>
       <TopContainer>
-        <Reload
-          onClick={() => {
-            // 배열의 몇번째 항목을 눌렀는 지, url 파라미터로 넘겨줍니다.
-            window.location.reload();
-          }}
-        >
-          <FcRefresh size="37" />
-        </Reload>
         <Avatar src={image}>{userName}</Avatar>
       </TopContainer>
       <Title>{userTitle}</Title>
